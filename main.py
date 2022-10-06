@@ -51,31 +51,40 @@ game = PersGame([1, 3, 2, 4], [1, 3, 2, 4])
 
 sg.theme('DarkAmber')
 layout = [ [sg.Text('Persuasion Game')],
-           [sg.Text('Admire', size=(8,1)), sg.ProgressBar(90, orientation='h', size=(20, 20), key='admirebar')],
-           [sg.Text('Boast', size=(8,1)), sg.ProgressBar(90, orientation='h', size=(20, 20), key='boastbar')],
-           [sg.Text('Joke', size=(8,1)), sg.ProgressBar(90, orientation='h', size=(20, 20), key='jokebar')],
-           [sg.Text('Coerce', size=(8,1)), sg.ProgressBar(90, orientation='h', size=(20, 20), key='coercebar')],
+           [sg.Text('Admire', size=(8,1)), sg.ProgressBar(90, orientation='h', size=(20, 20), key='admirebar'), sg.Text('', key='adm')],
+           [sg.Text('Boast', size=(8,1)), sg.ProgressBar(90, orientation='h', size=(20, 20), key='boastbar'), sg.Text('', key='boa')],
+           [sg.Text('Joke', size=(8,1)), sg.ProgressBar(90, orientation='h', size=(20, 20), key='jokebar'), sg.Text('', key='jok')],
+           [sg.Text('Coerce', size=(8,1)), sg.ProgressBar(90, orientation='h', size=(20, 20), key='coercebar'), sg.Text('', key='coe')],
+           [sg.Text('Disposition: '), sg.Text('50', key='disp')],
            [sg.Combo(['Admire', 'Boast', 'Joke', 'Coerce'])],
-           [sg.Button('Select'), sg.Button('Cancel')] ]
+           [sg.Button('Start', key='-START-'), sg.Button('Select', key='-SELECT-', visible=False),  sg.Button('Exit')] ]
 window = sg.Window('Persuasion Game Simulator', layout)
-admire_bar = window['admirebar']
-boast_bar = window['boastbar']
-joke_bar = window['jokebar']
-coerce_bar = window['coercebar']
 
-
-
-active = True
-while active:
-    active = False
+while True:
     event, values = window.read()
-    admire_bar.UpdateBar(game.wedge[0]*25 -15)
-    boast_bar.UpdateBar(game.wedge[1]*25 -15)
-    joke_bar.UpdateBar(game.wedge[2]*25 -15)
-    coerce_bar.UpdateBar(game.wedge[3]*25 -15)
-    window.read()
-    if event == sg.WIN_CLOSED or event == 'Cancel': # if user closes window or clicks cancel
+    if event == sg.WIN_CLOSED or event == 'Exit':
         break
-    print(values[0])
+    if event == '-START-':
+        window['admirebar'].UpdateBar(game.wedge[0]*25 -15)
+        window['adm'].update(prefToStr(game.pref[0]))
+        window['boastbar'].UpdateBar(game.wedge[1]*25 -15)
+        window['boa'].update(prefToStr(game.pref[1]))
+        window['jokebar'].UpdateBar(game.wedge[2]*25 -15)
+        window['jok'].update(prefToStr(game.pref[2]))
+        window['coercebar'].UpdateBar(game.wedge[3]*25 -15)
+        window['coe'].update(prefToStr(game.pref[3]))
+        window['-START-'].update(visible=False)
+        window['-SELECT-'].update(visible=True)
+    if event == '-SELECT-':
+        if values[0] == 'Admire':
+            print('Admire play')
+        if values[0] == 'Boast':
+            print('Boast play')
+        if values[0] == 'Joke':
+            print('Joke play')
+        if values[0] == 'Coerce':
+            print('Coerce play')
+        else:
+            print('Empty selection')
 
 window.close()
